@@ -3,7 +3,7 @@ using UnityEngine.Events;
 using System.Collections;
 
 /// <summary>
-/// 2022 11 08
+/// 2023 03 05
 /// Application quit with transition effect (UnityEvent)
 ///     * Separated for different effect
 /// 
@@ -16,44 +16,46 @@ using System.Collections;
 public class ApplicationQuit : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] float transitionDelay = 0.5f;
-    [SerializeField] float transitionDuration = 1.0f;
+    [SerializeField] float delay = 0.5f;
+    [SerializeField] float duration = 1.0f;
     // Prevent click-spam (Can be used on a button)
-    bool isTransitionWorking = false;           
+    bool isWorking = false;           
 
     [Header("Event")]
-    [SerializeField] OnTransition onTransition;
-    [System.Serializable] [SerializeField] class OnTransition : UnityEvent<float, float, float>
+    [SerializeField] OnApplicationQuit onApplicationQuit;
+    [System.Serializable] [SerializeField] class OnApplicationQuit : UnityEvent<float, float, float>
     {
         // Transition: from, to, duration
     }
-    [SerializeField] UnityEvent onTransitionEnd;
+    [SerializeField] UnityEvent onApplicationQuitEnd;
 
 
 
     // OnApplicationQuit exists in unity
-    public void OnAppQuit()
+    public void AppQuit()
     {
-        if (isTransitionWorking == false)
+        if (isWorking)
         {
-            StartCoroutine(OnAppQuitCoroutine());
+            return;
         }
+
+        StartCoroutine(AppQuitCoroutine());
     }
 
-    IEnumerator OnAppQuitCoroutine()
+    IEnumerator AppQuitCoroutine()
     {
-        isTransitionWorking = true;
+        isWorking = true;
 
-        yield return new WaitForSeconds(transitionDelay);
+        yield return new WaitForSeconds(delay);
 
-        onTransition.Invoke(0.0f, 1.0f, transitionDuration);
+        onApplicationQuit.Invoke(0.0f, 1.0f, duration);
 
-        yield return new WaitForSeconds(transitionDuration);
+        yield return new WaitForSeconds(duration);
 
         // Handle event end
-        if (0 < onTransitionEnd.GetPersistentEventCount())
+        if (0 < onApplicationQuitEnd.GetPersistentEventCount())
         {
-            onTransitionEnd.Invoke();
+            onApplicationQuitEnd.Invoke();
         }
 
         yield return new WaitForEndOfFrame();
@@ -64,6 +66,6 @@ public class ApplicationQuit : MonoBehaviour
         // Destroy process
         //System.Diagnostics.Process.GetCurrentProcess().Kill();            
 
-        isTransitionWorking = false;
+        isWorking = false;
     }
 }

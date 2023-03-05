@@ -2,7 +2,7 @@
 using System.Collections;
 
 /// <summary>
-/// 2022 11 08
+/// 2023 03 05
 /// Scene transition fade effect
 ///     * (WARNING) This script is using deprecated "OnGUI" but still works with Unity 2019 and 2020 and 2022
 ///     * This script is a little bit complicated because of "OnGUI" usage. Unity can not use functions outside OnGUI
@@ -12,16 +12,15 @@ using System.Collections;
 ///     * Set main camera tag to "MainCamera"
 /// </summary>
 
-public class SceneEffectFadeGUI : MonoBehaviour
+public class SceneFadeEffectGUI : MonoBehaviour
 {
     [Header("Settings")]
-    // Transition
-    [SerializeField] TransitionType transitionType;
-    [SerializeField] enum TransitionType
+    [SerializeField] FadeType fadeType;
+    [SerializeField] enum FadeType
     {
-        fade,
-        fadeHorizontal,
-        fadeVertical
+        simple,
+        horizontal,
+        vertical
     }
     // Texture
     Texture2D texture;
@@ -30,8 +29,10 @@ public class SceneEffectFadeGUI : MonoBehaviour
     [SerializeField] int textureOrder = -1000;
     // Effect parameter used in OnGUI (Fade ammount)
     float textureTransitionValue = 0.0f;
+    // Fade type horizontal/vertical shutter position value
+    float positionValue = 0.0f;
     // Enable/Disable drawing in OnGUI to save resources
-    bool isTextureDrawing = false;
+    bool isDrawing = false;
     // Main camera to apply effect to
     Camera cameraMain;                                 
 
@@ -50,26 +51,36 @@ public class SceneEffectFadeGUI : MonoBehaviour
         texture = new Texture2D(1, 1);
     }
 
-    public void Transition(float from, float to, float duration)
+    public void Fade(float from, float to, float duration)
     {
         // Get textureTransitionValue for fade amount
         // Can not use in ONGUI because need to do this periodically in separate thread
-        StartCoroutine(TransitionCoroutine(from, to, duration));
+        StartCoroutine(FadeCoroutine(from, to, duration));
     }
 
-    IEnumerator TransitionCoroutine(float from, float to, float duration)
+    IEnumerator FadeCoroutine(float from, float to, float duration)
     {
         // Transition parameters
         float transitionValue = 0.0f;
         // Same as Time.deltaTime / duration
         float transitionRate = 1 / duration;           
 
-        isTextureDrawing = true;
+        isDrawing = true;
 
         while (transitionValue < 1.0f)
         {
-            transitionValue += Time.deltaTime * transitionRate;
+            transitionValue += Time.unscaledDeltaTime * transitionRate;
             textureTransitionValue = Mathf.Lerp(from, to, transitionValue);
+            
+            // Handle horizontal/vertical shutter positions
+            if (from < to)
+            {
+                positionValue = Mathf.Lerp(0.0f, 1.0f, transitionValue);
+            }
+            else
+            {
+                positionValue = Mathf.Lerp(1.0f, 0.0f, transitionValue);
+            }
 
             yield return 0;
         }
@@ -80,14 +91,14 @@ public class SceneEffectFadeGUI : MonoBehaviour
         // Stop drawing only for FadeIn case (Else in fadeOut case drawing stops and no effect is visible after transition ends)
         if (to < from)          
         {
-            isTextureDrawing = false;
+            isDrawing = false;
         }
     }
 
     // OnGUI runs twice per frame
     void OnGUI()           
     {
-        if (isTextureDrawing == true)
+        if (isDrawing == true)
         {
             // Set texture color dynamically
             texture.SetPixel(0, 0, textureColor);
@@ -95,19 +106,19 @@ public class SceneEffectFadeGUI : MonoBehaviour
 
             // Draw
             GUI.depth = textureOrder;
-            if (transitionType == TransitionType.fade)
+            if (fadeType == FadeType.simple)
             {
                 GUI.DrawTexture(new Rect(0, 0, cameraMain.pixelWidth, cameraMain.pixelHeight), texture);
             }
-            else if (transitionType == TransitionType.fadeHorizontal)
+            else if (fadeType == FadeType.horizontal)
             {
-                GUI.DrawTexture(new Rect(0, 0, cameraMain.pixelWidth / 2 * textureTransitionValue, cameraMain.pixelHeight), texture);
-                GUI.DrawTexture(new Rect(cameraMain.pixelWidth / 2 + cameraMain.pixelWidth / 2 * (1 - textureTransitionValue), 0, cameraMain.pixelWidth / 2, cameraMain.pixelHeight), texture);
+                GUI.DrawTexture(new Rect(0, 0, cameraMain.pixelWidth / 2 * positionValue, cameraMain.pixelHeight), texture);
+                GUI.DrawTexture(new Rect(cameraMain.pixelWidth / 2 + cameraMain.pixelWidth / 2 * (1 - positionValue), 0, cameraMain.pixelWidth / 2, cameraMain.pixelHeight), texture);
             }
-            else if (transitionType == TransitionType.fadeVertical)
+            else if (fadeType == FadeType.vertical)
             {
-                GUI.DrawTexture(new Rect(0, 0, cameraMain.pixelWidth, cameraMain.pixelHeight / 2 * textureTransitionValue), texture);
-                GUI.DrawTexture(new Rect(0, cameraMain.pixelHeight / 2 + cameraMain.pixelHeight / 2 * (1 - textureTransitionValue), cameraMain.pixelWidth, cameraMain.pixelHeight), texture);
+                GUI.DrawTexture(new Rect(0, 0, cameraMain.pixelWidth, cameraMain.pixelHeight / 2 * positionValue), texture);
+                GUI.DrawTexture(new Rect(0, cameraMain.pixelHeight / 2 + cameraMain.pixelHeight / 2 * (1 - positionValue), cameraMain.pixelWidth, cameraMain.pixelHeight), texture);
             }
             textureColor.a = textureTransitionValue;
         }
