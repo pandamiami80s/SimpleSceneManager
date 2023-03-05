@@ -1,17 +1,13 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// 2023 03 05 
+/// 2023 03 05
+///     * To play animations during pause use Animator -> Update Mode -> Unscaled Time
 /// </summary>
 
 public class PauseScene : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField] float fadeDuration = 0.5f;
-    [SerializeField] float fadeAmount = 0.5f;
-    bool isWorking = false;
     bool isPaused = false;
 
     [Header("Event")]
@@ -26,27 +22,12 @@ public class PauseScene : MonoBehaviour
         {
             return;
         }
-        
-        if (isWorking)
-        {
-            return;
-        }
 
-        StartCoroutine(PauseCoroutine());
-    }
-    IEnumerator PauseCoroutine()
-    {
-        isWorking = true;
-
+        onPause.Invoke();
         Time.timeScale = 0;
         isPaused = true;
-        onPause.Invoke();
-
-        yield return new WaitForSecondsRealtime(fadeDuration);
-
-        isWorking = false;
     }
-
+   
     public void Continue()
     {
         if (!isPaused)
@@ -54,23 +35,8 @@ public class PauseScene : MonoBehaviour
             return;
         }
 
-        if (isWorking)
-        {
-            return;
-        }
-
-        StartCoroutine(ContinueCoroutine());
-    }
-    IEnumerator ContinueCoroutine()
-    {
-        isWorking = true;
-
+        onContinue.Invoke();
         Time.timeScale = 1;
         isPaused = false;
-        onContinue.Invoke();
-        
-        yield return new WaitForSecondsRealtime(fadeDuration);
-
-        isWorking = false;
     }
 }
