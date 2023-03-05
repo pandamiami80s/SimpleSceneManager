@@ -17,6 +17,8 @@ public class PauseScene : MonoBehaviour
     [Header("Event")]
     [SerializeField] OnPause onPause;
     [System.Serializable] [SerializeField] class OnPause : UnityEvent<float, float, float> { }
+    [SerializeField] OnContinue onContinue;
+    [System.Serializable] [SerializeField] class OnContinue : UnityEvent<float, float, float> { }
 
 
 
@@ -67,7 +69,7 @@ public class PauseScene : MonoBehaviour
 
         Time.timeScale = 1;
         isPaused = false;
-        onPause.Invoke(fadeAmount, 0.0f, fadeDuration);
+        onContinue.Invoke(fadeAmount, 0.0f, fadeDuration);
         
         yield return new WaitForSecondsRealtime(fadeDuration);
 
