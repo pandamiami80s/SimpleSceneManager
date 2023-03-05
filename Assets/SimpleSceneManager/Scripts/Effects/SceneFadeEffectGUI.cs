@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 /// <summary>
@@ -29,8 +29,6 @@ public class SceneFadeEffectGUI : MonoBehaviour
     [SerializeField] int textureOrder = -1000;
     // Effect parameter used in OnGUI (Fade ammount)
     float textureTransitionValue = 0.0f;
-    // Fade type horizontal/vertical shutter position value
-    float positionValue = 0.0f;
     // Enable/Disable drawing in OnGUI to save resources
     bool isDrawing = false;
     // Main camera to apply effect to
@@ -71,16 +69,6 @@ public class SceneFadeEffectGUI : MonoBehaviour
         {
             transitionValue += Time.unscaledDeltaTime * transitionRate;
             textureTransitionValue = Mathf.Lerp(from, to, transitionValue);
-            
-            // Handle horizontal/vertical shutter positions
-            if (from < to)
-            {
-                positionValue = Mathf.Lerp(0.0f, 1.0f, transitionValue);
-            }
-            else
-            {
-                positionValue = Mathf.Lerp(1.0f, 0.0f, transitionValue);
-            }
 
             yield return 0;
         }
@@ -112,13 +100,13 @@ public class SceneFadeEffectGUI : MonoBehaviour
             }
             else if (fadeType == FadeType.horizontal)
             {
-                GUI.DrawTexture(new Rect(0, 0, cameraMain.pixelWidth / 2 * positionValue, cameraMain.pixelHeight), texture);
-                GUI.DrawTexture(new Rect(cameraMain.pixelWidth / 2 + cameraMain.pixelWidth / 2 * (1 - positionValue), 0, cameraMain.pixelWidth / 2, cameraMain.pixelHeight), texture);
+                GUI.DrawTexture(new Rect(0, 0, cameraMain.pixelWidth / 2 * textureTransitionValue, cameraMain.pixelHeight), texture);
+                GUI.DrawTexture(new Rect(cameraMain.pixelWidth / 2 + cameraMain.pixelWidth / 2 * (1 - textureTransitionValue), 0, cameraMain.pixelWidth / 2, cameraMain.pixelHeight), texture);
             }
             else if (fadeType == FadeType.vertical)
             {
-                GUI.DrawTexture(new Rect(0, 0, cameraMain.pixelWidth, cameraMain.pixelHeight / 2 * positionValue), texture);
-                GUI.DrawTexture(new Rect(0, cameraMain.pixelHeight / 2 + cameraMain.pixelHeight / 2 * (1 - positionValue), cameraMain.pixelWidth, cameraMain.pixelHeight), texture);
+                GUI.DrawTexture(new Rect(0, 0, cameraMain.pixelWidth, cameraMain.pixelHeight / 2 * textureTransitionValue), texture);
+                GUI.DrawTexture(new Rect(0, cameraMain.pixelHeight / 2 + cameraMain.pixelHeight / 2 * (1 - textureTransitionValue), cameraMain.pixelWidth, cameraMain.pixelHeight), texture);
             }
             textureColor.a = textureTransitionValue;
         }
