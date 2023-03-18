@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 
 /// <summary>
-/// 2023 03 05
+/// 2023 03 18
 /// Scene Init with transition effect (UnityEvent)
 ///     * Separated for different effect
 ///     
@@ -21,9 +21,9 @@ public class InitScene : MonoBehaviour
     bool isWorking = false;
 
     [Header("Events")]
-    [SerializeField] OnInit onInit;
-    [System.Serializable] [SerializeField] class OnInit : UnityEvent<float, float, float> { }
-    [SerializeField] UnityEvent onInitEnd;
+    [SerializeField] OnInitScene onInitScene;
+    [System.Serializable] [SerializeField] class OnInitScene : UnityEvent<float, float, float> { }
+    [SerializeField] UnityEvent onInitSceneEnd;
 
 
 
@@ -41,14 +41,14 @@ public class InitScene : MonoBehaviour
     {
         isWorking = true;
 
-        onInit.Invoke(1.0f, 0.0f, initDuration);
+        onInitScene.Invoke(1.0f, 0.0f, initDuration);
 
         yield return new WaitForSeconds(initDuration);
 
         // Handle event end
-        if (0 < onInitEnd.GetPersistentEventCount())
+        if (0 < onInitSceneEnd.GetPersistentEventCount())
         {
-            onInitEnd.Invoke();
+            onInitSceneEnd.Invoke();
         }
 
         isWorking = false;
