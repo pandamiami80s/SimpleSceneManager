@@ -1,18 +1,14 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
 /// <summary>
-/// 2023 03 05
-/// Scene change (sync) with transition effect (UnityEvent)
-///     * Separated for different effect
+/// 2023 03 18
 /// 
-/// Setup:
-///     * Attach to gameObject
-/// Usage: 
-///     * Use 'onTransition' for transition effect
-///     * Use 'onTransitionEnd' to run main logic after transition (Avoid collision)
+/// Usage:
+///     * Change scene transition effect
+///     * Change scene after transition effect (Different scene load function when used with PUN)
 /// </summary>
 
 public class ChangeSceneSync : MonoBehaviour
@@ -29,17 +25,17 @@ public class ChangeSceneSync : MonoBehaviour
 
 
 
-    public void ChangeScene(int sceneIndex)
+    public void ChangeSceneTransition()
     {
         if (isWorking)
         {
             return;
         }
 
-        StartCoroutine(ChangeSceneCoroutine(sceneIndex));
+        StartCoroutine(ChangeSceneTransitionCoroutine());
     }
 
-    IEnumerator ChangeSceneCoroutine(int sceneIndex)
+    IEnumerator ChangeSceneTransitionCoroutine()
     {
         isWorking = true;
 
@@ -57,8 +53,11 @@ public class ChangeSceneSync : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
-        SceneManager.LoadScene(sceneIndex);
-
         isWorking = false;
+    }
+
+    public void ChangeScene(int sceneIndex)
+    {
+        SceneManager.LoadScene(sceneIndex);
     }
 }
