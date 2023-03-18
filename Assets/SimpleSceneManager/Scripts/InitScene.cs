@@ -6,8 +6,8 @@ using System.Collections;
 /// 2023 03 18
 /// 
 /// Usage:
-///     * Scene transition effect
-///     * Run main logic after transition effect (Avoid collisions with main thread)
+///     * Init scene transition effect
+///     * Run main game logic after transition effect (Avoid collisions with main thread)
 /// </summary>
 
 public class InitScene : MonoBehaviour
