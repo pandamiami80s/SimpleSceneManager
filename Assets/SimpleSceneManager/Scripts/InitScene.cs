@@ -30,10 +30,10 @@ public class InitScene : MonoBehaviour
             return;
         }
 
-        StartCoroutine(SceneInitCoroutine());
+        StartCoroutine(InitSceneCoroutine());
     }
 
-    IEnumerator SceneInitCoroutine()
+    IEnumerator InitSceneCoroutine()
     {
         isWorking = true;
 
