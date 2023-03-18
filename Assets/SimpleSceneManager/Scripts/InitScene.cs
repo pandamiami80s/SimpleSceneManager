@@ -4,14 +4,10 @@ using System.Collections;
 
 /// <summary>
 /// 2023 03 18
-/// Scene Init with transition effect (UnityEvent)
-///     * Separated for different effect
-///     
-/// Setup:
-///     * Attach to gameObject
-/// Usage: 
-///     * Use 'onTransition' for transition effect
-///     * Use 'onTransitionEnd' to run main logic after transition (Avoid collision)
+/// 
+/// Usage:
+///     * Scene transition effect
+///     * Run main logic after transition effect (Avoid collisions with main thread)
 /// </summary>
 
 public class InitScene : MonoBehaviour
