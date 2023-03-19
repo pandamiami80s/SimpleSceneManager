@@ -25,17 +25,17 @@ public class ChangeSceneSync : MonoBehaviour
 
 
 
-    public void ChangeSceneTransition(int sceneIndex)
+    public void ChangeScene(int sceneIndex)
     {
         if (isWorking)
         {
             return;
         }
 
-        StartCoroutine(ChangeSceneTransitionCoroutine(sceneIndex));
+        StartCoroutine(ChangeSceneCoroutine(sceneIndex));
     }
 
-    IEnumerator ChangeSceneTransitionCoroutine(int sceneIndex)
+    IEnumerator ChangeSceneCoroutine(int sceneIndex)
     {
         isWorking = true;
 
