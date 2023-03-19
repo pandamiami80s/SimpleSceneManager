@@ -16,7 +16,7 @@ public class ChangeSceneSync : MonoBehaviour
     [Header("Settings")]
     [SerializeField] float delay = 0.5f;
     [SerializeField] float duration = 1.0f;
-    bool isWorking = false;          
+    bool isWorking = false;
 
     [Header("Event")]
     [SerializeField] OnChangeScene onChangeScene;
