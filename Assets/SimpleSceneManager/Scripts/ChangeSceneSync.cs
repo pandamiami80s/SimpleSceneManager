@@ -4,11 +4,11 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 /// <summary>
-/// 2023 03 18
+/// 2023 03 19
 /// 
 /// Usage:
 ///     * Change scene transition effect
-///     * Change scene after transition effect (Different scene load function when used with PUN)
+///     * Use event for different ChangeScene function (When used PUN)
 /// </summary>
 
 public class ChangeSceneSync : MonoBehaviour
@@ -25,17 +25,17 @@ public class ChangeSceneSync : MonoBehaviour
 
 
 
-    public void ChangeSceneTransition()
+    public void ChangeSceneTransition(int sceneIndex)
     {
         if (isWorking)
         {
             return;
         }
 
-        StartCoroutine(ChangeSceneTransitionCoroutine());
+        StartCoroutine(ChangeSceneTransitionCoroutine(sceneIndex));
     }
 
-    IEnumerator ChangeSceneTransitionCoroutine()
+    IEnumerator ChangeSceneTransitionCoroutine(int sceneIndex)
     {
         isWorking = true;
 
@@ -50,14 +50,13 @@ public class ChangeSceneSync : MonoBehaviour
         {
             onChangeSceneEnd.Invoke();
         }
+        else
+        {
+            SceneManager.LoadScene(sceneIndex);
+        }
 
         yield return new WaitForEndOfFrame();
 
         isWorking = false;
-    }
-
-    public void ChangeScene(int sceneIndex)
-    {
-        SceneManager.LoadScene(sceneIndex);
     }
 }
