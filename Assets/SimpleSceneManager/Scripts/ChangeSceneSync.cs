@@ -21,8 +21,8 @@ public class ChangeSceneSync : MonoBehaviour
     [Header("Event")]
     [SerializeField] OnChangeScene onChangeScene;
     [System.Serializable] [SerializeField] class OnChangeScene : UnityEvent<float, float, float> { }
-    [SerializeField] UnityEvent onChangeSceneEnd;
-
+    [SerializeField] OnChangeSceneEnd onChangeSceneEnd;
+    [System.Serializable] [SerializeField] class OnChangeSceneEnd : UnityEvent<int> { }
 
 
     public void ChangeScene(int sceneIndex)
@@ -48,7 +48,7 @@ public class ChangeSceneSync : MonoBehaviour
         // Handle event end
         if (0 < onChangeSceneEnd.GetPersistentEventCount())
         {
-            onChangeSceneEnd.Invoke();
+            onChangeSceneEnd.Invoke(sceneIndex);
         }
         else
         {
