@@ -1,31 +1,28 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-// Events
 using UnityEngine.Events;
 
-
+// OLD SRIPT FROM 2022
 
 /// <summary>
-/// 2022 02 16
+/// 2024 01 31
 /// 
 /// Application Splash Scene script
-///     * (WARNING) This script is using deprecated "OnGUI" but still works with Unity 2019 and 2020
+///     * (WARNING) This script is using deprecated "OnGUI" but still works with Unity 2019, 2020, 2021, 2022
 ///     * This script is a little bit complicated because of "OnGUI" usage. Unity can not use functions outside OnGUI
 /// 
 /// Setup:
-///     - Create separate splash scene
-///     - Attach to gameObject
-///     - Prepare sprite(s) at least 800x600 (And sound if needed)
-///     - Set main camera tag to "MainCamera"
-///     - Check use conditions
+///     * Create separate splash scene
+///     * Attach to gameObject
+///     * Prepare sprite(s) at least 800x600 (And sound if needed)
+///     * Set main camera tag to "MainCamera"
+///     * Check use conditions
 /// Usage:
-///     - Call ON_SplashScreen_show to start
-///     - Use 'event_sprite_transition_effect' for splash sprites transition effects
-///     - Use 'event_transition_end' to change scene after splash sprites shown
+///     * Call ON_SplashScreen_show to start
+///     * Use 'event_sprite_transition_effect' for splash sprites transition effects
+///     * Use 'event_transition_end' to change scene after splash sprites shown
 /// </summary>
-
-
 
 [RequireComponent(typeof(AudioSource))]
 public class SplashScene : MonoBehaviour
@@ -34,7 +31,9 @@ public class SplashScene : MonoBehaviour
     [SerializeField] int sprite_offset = 32;
     // Sprites
     [SerializeField] List<class_splashScene_sprite> list_splashScene_sprites = new List<class_splashScene_sprite>();
-    [System.Serializable] [SerializeField] class class_splashScene_sprite
+    [System.Serializable]
+    [SerializeField]
+    class class_splashScene_sprite
     {
         // Image
         public Sprite sprite;
@@ -56,13 +55,17 @@ public class SplashScene : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] Event_sprite_transition_effect event_sprite_transition_effect;
-    [System.Serializable] [SerializeField] class Event_sprite_transition_effect : UnityEvent<float, float, float>
+    [System.Serializable]
+    [SerializeField]
+    class Event_sprite_transition_effect : UnityEvent<float, float, float>
     {
         // Transition: From, to, duration
     }
     [SerializeField] int scene_index;
     [SerializeField] Event_transition_end event_transition_end;
-    [System.Serializable] [SerializeField] class Event_transition_end : UnityEvent<int>
+    [System.Serializable]
+    [SerializeField]
+    class Event_transition_end : UnityEvent<int>
     {
         // Scene index
     }
@@ -104,15 +107,11 @@ public class SplashScene : MonoBehaviour
         return true;
     }
 
-
-
     void Start()
     {
         // Do not sleep during splash
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
-
-
 
     public void ON_SplashScreen_show()
     {
@@ -162,15 +161,13 @@ public class SplashScene : MonoBehaviour
         event_transition_end.Invoke(scene_index);
     }
 
-
-
     void OnGUI()            // OnGUI runs twice per frame
     {
         // Draw sprite
         if (sprite_isDrawing == true)
         {
-            GUI.DrawTexture(new Rect(sprite_offset, sprite_offset, camera_main.pixelWidth - sprite_offset * 2, camera_main.pixelHeight - sprite_offset * 2), 
-                list_splashScene_sprites[sprite_current].sprite.texture, 
+            GUI.DrawTexture(new Rect(sprite_offset, sprite_offset, camera_main.pixelWidth - sprite_offset * 2, camera_main.pixelHeight - sprite_offset * 2),
+                list_splashScene_sprites[sprite_current].sprite.texture,
                 ScaleMode.ScaleToFit);          // Scale to screen size automatically
         }
     }

@@ -1,12 +1,11 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 /// <summary>
-/// 2023 03 18
-/// 
-/// Usage:
-///     * Init scene transition effect
+/// 2024 01 31
+/// Init scene transition effect
 ///     * Run main game logic after transition effect (Avoid collisions with main thread)
 /// </summary>
 
@@ -17,19 +16,29 @@ public class InitScene : MonoBehaviour
     bool isWorking = false;
 
     [Header("Events")]
-    [SerializeField] OnInitScene onInitScene;
-    [System.Serializable] [SerializeField] class OnInitScene : UnityEvent<float, float, float> { }
+    [SerializeField] OnTransition onTransition;
+    [System.Serializable] [SerializeField] class OnTransition : UnityEvent<float, float, float> { }
     [SerializeField] UnityEvent onInitSceneEnd;
 
 
 
-    void Start()
+    void OnEnable()
     {
         if (isWorking)
         {
             return;
         }
 
+        SceneManager.activeSceneChanged += OnActiveSceneChanged;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.activeSceneChanged -= OnActiveSceneChanged;
+    }
+
+    void OnActiveSceneChanged(Scene scene, Scene loadSceneMode)
+    {
         StartCoroutine(InitSceneCoroutine());
     }
 
@@ -37,15 +46,12 @@ public class InitScene : MonoBehaviour
     {
         isWorking = true;
 
-        onInitScene.Invoke(1.0f, 0.0f, initDuration);
+        onTransition.Invoke(1.0f, 0.0f, initDuration);
 
         yield return new WaitForSeconds(initDuration);
 
         // Handle event end
-        if (0 < onInitSceneEnd.GetPersistentEventCount())
-        {
-            onInitSceneEnd.Invoke();
-        }
+        onInitSceneEnd.Invoke();
 
         isWorking = false;
     }

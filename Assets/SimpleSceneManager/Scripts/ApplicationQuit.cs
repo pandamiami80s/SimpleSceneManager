@@ -3,13 +3,9 @@ using UnityEngine.Events;
 using System.Collections;
 
 /// <summary>
-/// 2023 03 05
+/// 2024 01 31
 /// Application quit with transition effect (UnityEvent)
 ///     * Separated for different effect
-/// 
-/// Setup:
-///     * Attach to gameObject 
-/// Usage:
 ///     * Use 'onTransition' for transition effect
 /// </summary>
 
@@ -19,11 +15,13 @@ public class ApplicationQuit : MonoBehaviour
     [SerializeField] float delay = 0.5f;
     [SerializeField] float duration = 1.0f;
     // Prevent click-spam (Can be used on a button)
-    bool isWorking = false;           
+    bool isWorking = false;
 
     [Header("Event")]
     [SerializeField] OnApplicationQuit onApplicationQuit;
-    [System.Serializable] [SerializeField] class OnApplicationQuit : UnityEvent<float, float, float>
+    [System.Serializable]
+    [SerializeField]
+    class OnApplicationQuit : UnityEvent<float, float, float>
     {
         // Transition: from, to, duration
     }

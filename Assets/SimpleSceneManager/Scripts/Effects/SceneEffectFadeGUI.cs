@@ -2,17 +2,14 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
-/// 2023 03 05
+/// 2024 01 31
 /// Scene transition fade effect
-///     * (WARNING) This script is using deprecated "OnGUI" but still works with Unity 2019 and 2020 and 2022
+///     * (WARNING) This script is using deprecated "OnGUI" but still works with Unity 2019, 2020, 2021, 2022
 ///     * This script is a little bit complicated because of "OnGUI" usage. Unity can not use functions outside OnGUI
-/// 
-/// Setup:
-///     * Attach to gameObject with events
 ///     * Set main camera tag to "MainCamera"
 /// </summary>
 
-public class SceneFadeEffectGUI : MonoBehaviour
+public class SceneEffectFadeGUI : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] FadeType fadeType;
@@ -32,7 +29,7 @@ public class SceneFadeEffectGUI : MonoBehaviour
     // Enable/Disable drawing in OnGUI to save resources
     bool isDrawing = false;
     // Main camera to apply effect to
-    Camera cameraMain;                                 
+    Camera cameraMain;
 
 
 
@@ -61,7 +58,7 @@ public class SceneFadeEffectGUI : MonoBehaviour
         // Transition parameters
         float transitionValue = 0.0f;
         // Same as Time.deltaTime / duration
-        float transitionRate = 1 / duration;           
+        float transitionRate = 1 / duration;
 
         isDrawing = true;
 
@@ -77,15 +74,15 @@ public class SceneFadeEffectGUI : MonoBehaviour
         //yield return new WaitForEndOfFrame();             
 
         // Stop drawing only for FadeIn case (Else in fadeOut case drawing stops and no effect is visible after transition ends)
-        if (to < from)          
+        if (to < from)
         {
             isDrawing = false;
         }
     }
-
-    // OnGUI runs twice per frame
-    void OnGUI()           
+    
+    void OnGUI()
     {
+        // OnGUI runs twice per frame
         if (isDrawing == true)
         {
             // Set texture color dynamically

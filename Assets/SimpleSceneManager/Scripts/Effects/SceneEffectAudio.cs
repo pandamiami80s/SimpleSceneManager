@@ -2,17 +2,11 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 /// <summary>
-/// 2022 11 08
+/// 2024 01 31
 /// Scene transition audio effect
-/// 
-/// Setup:
-///     * Attach to gameObject with events
-///     * Set audio clip
-///     * Assign Audio Mixer Group
+///     * Use Audio Mixer Group for better audio effects handling (Enable/disable in options)
 ///         * Create new audio mixer (Window -> Audio -> Audio Mixer -> "+")
 ///         * Create new item (Groups -> Master -> "+" and name it "Effects")
-/// Usage: 
-///     * Use Audio Mixer Group for better auido effects handling (Enable/disable in options)
 /// </summary>
 
 [RequireComponent(typeof(AudioSource))]
